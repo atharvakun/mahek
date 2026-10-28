@@ -127,7 +127,8 @@ body.open .scroll-cue{animation:fadeUp 1s ease forwards 2.4s}
 .frame.note p{font-family:var(--serif);font-size:clamp(18px,2vw,24px);line-height:1.3;color:var(--fg);text-wrap:balance}
 .frame.note p::before{content:"never captured";display:block;font-family:var(--sans);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .reel-count{position:absolute;bottom:max(18px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-@media (max-width:640px){.frame{height:26vh}.frame.tall{height:34vh}.reel-pin{gap:2.5vh}}
+.reel-row:nth-child(3){padding-left:calc(max(16px,env(safe-area-inset-left,0px)) + 6vw)}
+@media (max-width:640px){.frame{height:20vh}.frame.tall{height:25vh}.reel-pin{gap:2vh}.frame.note{width:min(240px,58vw);padding:14px 16px}.frame.note p{font-size:16px}}
 #lb video{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 40px 120px rgba(0,0,0,.7)}
 #lb{position:fixed;inset:0;z-index:80;background:rgba(6,4,10,.94);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
 #lb[hidden]{display:none}
@@ -313,6 +314,7 @@ footer i{color:var(--rose2);font-style:normal}
       <div class="reel-pin">
         <div class="reel-row" id="row1"></div>
         <div class="reel-row" id="row2"></div>
+        <div class="reel-row" id="row3" hidden></div>
         <p class="reel-count" id="reelCount"></p>
       </div>
     </div>
@@ -582,24 +584,26 @@ const MEDIA = (Array.isArray(window.PHOTOS) ? window.PHOTOS : []).map(x => typeo
 let reelTick = () => { };
 if (!MEDIA.length) { $('#gallery').hidden = true; }
 else {
-  const reel = $('#reel'), rows = [$('#row1'), $('#row2')], count = $('#reelCount');
-  const html = [[], []]; const notes = CONFIG.uncaptured.slice(); const every = Math.max(4, Math.floor(MEDIA.length / (notes.length + 1)));
+  const phone = innerWidth < 640, ROWS = phone ? 3 : 2, SPEED = phone ? .5 : .55;
+  const reel = $('#reel'), rows = [$('#row1'), $('#row2'), $('#row3')].slice(0, ROWS), count = $('#reelCount');
+  if (ROWS === 3) $('#row3').hidden = false;
+  const html = rows.map(() => []); const notes = CONFIG.uncaptured.slice(); const every = Math.max(4, Math.floor(MEDIA.length / (notes.length + 1)));
   MEDIA.forEach((m, i) => {
-    const r = i % 2, tall = ((i >> 1) % 3) === 1, rot = ((i % 3) - 1) * 1.1;
+    const r = i % ROWS, tall = (Math.floor(i / ROWS) % 3) === 1, rot = ((i % 3) - 1) * 1.1;
     const ar = m.w && m.h ? `${m.w}/${m.h}` : (m.video ? '9/16' : '3/4');
     html[r].push(`<figure class="frame${tall ? ' tall' : ''}" data-i="${i}" style="--r:${rot}deg;--ar:${ar}">` +
       (m.video ? `<video src="${m.src}" muted loop playsinline preload="metadata"></video><span class="play">▶</span>` : `<img src="${m.src}" alt="" loading="lazy" decoding="async">`) + `</figure>`);
-    if (notes.length && (i + 1) % every === 0) html[(i + 1) % 2].push(`<div class="frame note"><p>${notes.shift()}</p></div>`);
+    if (notes.length && (i + 1) % every === 0) html[(i + 1) % ROWS].push(`<div class="frame note"><p>${notes.shift()}</p></div>`);
   });
-  rows[0].innerHTML = html[0].join(''); rows[1].innerHTML = html[1].join('');
+  rows.forEach((r, i) => { r.innerHTML = html[i].join(''); });
   const frames = rows.map(r => $$('.frame', r));
-  let widths = [0, 0], lefts = [[], []], reelH = innerHeight, measureQueued = false;
+  let widths = rows.map(() => 0), lefts = rows.map(() => []), reelH = innerHeight, measureQueued = false;
   function measure() {
     measureQueued = false;
     widths = rows.map(r => r.scrollWidth);
     lefts = frames.map(fs => fs.map(f => f.offsetLeft));
     const travel = Math.max(...widths) - innerWidth + 24;
-    reelH = Math.max(innerHeight, travel * .8 + innerHeight);
+    reelH = Math.max(innerHeight, travel * SPEED + innerHeight);
     reel.style.height = reelH + 'px';
     reelTick(innerHeight, innerWidth);
   }
