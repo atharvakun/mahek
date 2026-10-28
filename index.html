@@ -192,6 +192,7 @@ body.open .scroll-cue{animation:fadeUp 1s ease forwards 2.4s}
 .hug-msg{font-family:var(--serif);font-size:clamp(22px,3vw,30px);line-height:1.35;min-height:3.2em;max-width:34ch}
 .hug-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .hug-actions .btn{padding:12px 20px;font-size:14px}
+.sent{font-size:13px;color:var(--gold);letter-spacing:.04em}
 .date-out{border:1px dashed rgba(243,201,140,.5);border-radius:18px;padding:14px 18px;color:var(--gold);font-size:16px;max-width:40ch}
 .date-out[hidden]{display:none}
 .mood{display:grid;gap:12px;justify-items:center;border-top:1px solid var(--line);padding-top:20px;width:100%}
@@ -424,7 +425,9 @@ footer i{color:var(--rose2);font-style:normal}
       <button class="btn" id="hugAgain">Say it again</button>
       <button class="btn gold" id="dateIdea">Surprise date idea</button>
       <button class="btn ghost" id="playNote" hidden>▶ Play a voice note</button>
+      <a class="btn ghost" id="tellHim" href="#" target="_blank" rel="noopener" hidden>Tell him 💬</a>
     </div>
+    <p class="sent" id="sentNote" hidden>He's been told. His phone is buzzing right now.</p>
     <p class="date-out" id="dateOut" hidden></p>
     <div class="mood">
       <p class="q">How are you feeling today?</p>
@@ -455,7 +458,10 @@ const CONFIG = {
     where: "My home, Pune",
     note: "There's something here with your name on it. Literally.",
   },
-  whatsappNumber: "",              // e.g. "919876543210" (country code, no + or spaces). Leave "" to hide the button.
+  whatsappNumber: "918928966956",  // your number with country code, no + or spaces. Used by the WhatsApp buttons.
+  notify: {                        // push notification to your phone when she taps "I need you" (needs the ntfy app, subscribed to this topic)
+    topic: "mahek-needs-atharva-q7v2m9kx",
+  },
   musicUrl: "",                    // optional background music file (mp3). Leave "" for none.
   voiceNotes: [],                  // optional: ["notes/one.mp3","notes/two.mp3"]. Leave [] to hide the button.
   // Photos and videos come from the photos folder automatically (run update-photos.cmd after adding).
@@ -803,10 +809,18 @@ function typewrite(el, text, ms) {
 
 /* ---------- I need you ---------- */
 (function needyou() {
-  const ov = $('#hug'), msg = $('#hugMsg'), out = $('#dateOut'), mo = $('#moodOut');
-  let lastMsg = -1, lastDate = -1;
+  const ov = $('#hug'), msg = $('#hugMsg'), out = $('#dateOut'), mo = $('#moodOut'), sent = $('#sentNote');
+  let lastMsg = -1, lastDate = -1, lastPing = 0;
+  if (CONFIG.whatsappNumber) { const t = $('#tellHim'); t.hidden = false; t.href = 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent('I need you right now 🥺'); }
+  /* pings your phone through ntfy.sh; silent if it fails (and blocked inside the claude.ai preview) */
+  function ping(text, tags) {
+    if (!CONFIG.notify || !CONFIG.notify.topic || !window.fetch) return;
+    const now = Date.now(); if (now - lastPing < 20000) return; lastPing = now;
+    fetch('https://ntfy.sh/' + CONFIG.notify.topic, { method: 'POST', body: text, headers: { Title: CONFIG.herName + ' pressed the button', Priority: 'high', Tags: tags || 'heart' } })
+      .then(r => { if (r.ok) { sent.hidden = false; } }).catch(() => { });
+  }
   function say() { let i; do { i = Math.floor(Math.random() * CONFIG.hugMessages.length); } while (i === lastMsg && CONFIG.hugMessages.length > 1); lastMsg = i; typewrite(msg, CONFIG.hugMessages[i], 22); }
-  function open() { ov.hidden = false; document.body.classList.add('lock'); fab.classList.remove('show'); out.hidden = true; mo.textContent = ''; $$('.chip').forEach(c => c.classList.remove('on')); document.documentElement.style.setProperty('--glow-h', 338); say(); $('#hugClose').focus(); }
+  function open() { ov.hidden = false; document.body.classList.add('lock'); fab.classList.remove('show'); out.hidden = true; sent.hidden = true; mo.textContent = ''; $$('.chip').forEach(c => c.classList.remove('on')); document.documentElement.style.setProperty('--glow-h', 338); say(); $('#hugClose').focus(); ping(CONFIG.herName + ' needs you right now. ' + new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }), 'heart,rotating_light'); }
   function close() { ov.hidden = true; document.body.classList.remove('lock'); onScroll(); }
   $('#needBtn').addEventListener('click', open); $('#fab').addEventListener('click', open); $('#hugClose').addEventListener('click', close);
   ov.addEventListener('click', e => { if (e.target === ov) close(); });
@@ -814,7 +828,7 @@ function typewrite(el, text, ms) {
   $('#hugAgain').addEventListener('click', say);
   $('#dateIdea').addEventListener('click', () => { let i; do { i = Math.floor(Math.random() * CONFIG.dateIdeas.length); } while (i === lastDate && CONFIG.dateIdeas.length > 1); lastDate = i; out.hidden = false; out.textContent = '✦ ' + CONFIG.dateIdeas[i]; });
   const hues = { happy: 42, sad: 220, stressed: 280, missing: 338 };
-  $$('.chip').forEach(c => c.addEventListener('click', () => { $$('.chip').forEach(x => x.classList.remove('on')); c.classList.add('on'); const m = c.dataset.mood; document.documentElement.style.setProperty('--glow-h', hues[m]); typewrite(mo, rnd(CONFIG.moods[m]), 18); }));
+  $$('.chip').forEach(c => c.addEventListener('click', () => { $$('.chip').forEach(x => x.classList.remove('on')); c.classList.add('on'); const m = c.dataset.mood; document.documentElement.style.setProperty('--glow-h', hues[m]); typewrite(mo, rnd(CONFIG.moods[m]), 18); lastPing = 0; ping(CONFIG.herName + ' says she is feeling ' + (m === 'missing' ? 'like she misses you' : m) + '.', { happy: 'sun_with_face', sad: 'cloud_with_rain', stressed: 'cyclone', missing: 'people_hugging' }[m]); }));
   if (CONFIG.voiceNotes.length) {
     const b = $('#playNote'); b.hidden = false; let cur = null;
     b.addEventListener('click', () => { if (cur) { cur.pause(); } cur = new Audio(rnd(CONFIG.voiceNotes)); cur.play().then(() => { b.textContent = '▶ Another voice note'; }).catch(() => { b.textContent = "Couldn't play that one. Try again?"; }); });
