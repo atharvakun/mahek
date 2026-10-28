@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday Mahek</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one long cinematic scroll. Dark velvet ground, rose light, gold for the moments that matter. */
+:root{
+  --bg:#0a0710; --bg2:#160c20; --fg:#f8eef2; --muted:#a8949f;
+  --rose:#ff5d8f; --rose2:#ff9ebd; --gold:#f3c98c;
+  --card:#170f21; --line:rgba(255,255,255,.1); --paper:#fff7f1; --ink:#2a1a22;
+  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --glow-h:338;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+figure{margin:0}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+body.lock{overflow:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap.narrow{max-width:780px}
+.center{text-align:center}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1}
+section{padding-block:clamp(90px,14vh,170px);position:relative}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.02;text-wrap:balance;margin:0}
+.eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--rose);font-weight:700;margin:0 0 18px}
+.display{font-size:clamp(50px,10vw,136px)}
+.h2{font-size:clamp(38px,6.4vw,84px);margin-bottom:22px}
+.h2 i,.display i,.pin-line i{font-style:italic;color:var(--rose2)}
+.lead{font-size:clamp(18px,2.1vw,22px);color:var(--muted);max-width:58ch;margin:0}
+.center .lead,.narrow .lead{margin-inline:auto}
+p{margin:0}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+
+/* progress line */
+#prog{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:2px;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));z-index:40;transition:width .1s linear}
+
+/* gate */
+#gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(60% 50% at 50% 60%,#2a1030 0%,var(--bg) 70%);transition:opacity 1.1s ease,visibility 1.1s;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#gate.hide{opacity:0;visibility:hidden}
+.gate-in{text-align:center;display:grid;gap:26px;justify-items:center}
+.gate-in .eyebrow{margin:0}
+.gate-heart{width:132px;height:132px;background:none;border:0;padding:0;filter:drop-shadow(0 0 30px rgba(255,93,143,.6));animation:beat 1.6s ease-in-out infinite;border-radius:50%}
+.gate-heart svg{width:100%;height:100%;display:block}
+.gate-name{font-family:var(--serif);font-size:clamp(40px,8vw,88px);line-height:1}
+.gate-name i{font-style:italic;color:var(--rose2)}
+.gate-hint{color:var(--muted);font-size:14px;letter-spacing:.14em;text-transform:uppercase}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}60%{transform:scale(1)}}
+
+/* hero */
+.hero{min-height:100svh;display:grid;align-content:center;justify-items:center;text-align:center;gap:24px;padding-block:120px 80px}
+.hero-inner{will-change:transform,opacity}
+.char{display:inline-block;opacity:0;transform:translateY(50px) rotate(5deg);filter:blur(8px)}
+body.open .char{animation:charIn 1s cubic-bezier(.2,.7,.15,1) forwards;animation-delay:calc(var(--i)*40ms + .35s)}
+.char.sp{width:.28em}
+@keyframes charIn{to{opacity:1;transform:none;filter:none}}
+.hero .lead{opacity:0}
+body.open .hero .lead{animation:fadeUp 1.2s ease forwards 1.3s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.count{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border-radius:999px;padding:10px 20px;font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;opacity:0}
+body.open .count{animation:fadeUp 1.2s ease forwards 1.8s}
+.count b{color:var(--gold);font-weight:700}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:12px;letter-spacing:.2em;text-transform:uppercase;display:grid;justify-items:center;gap:8px;opacity:0}
+body.open .scroll-cue{animation:fadeUp 1s ease forwards 2.4s}
+.scroll-cue i{width:1px;height:46px;background:linear-gradient(var(--rose),transparent);display:block;animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* marquee */
+.marquee{overflow:hidden;border-block:1px solid var(--line);padding-block:16px;white-space:nowrap;background:rgba(255,255,255,.02)}
+.marquee .track{display:inline-block;animation:mq 40s linear infinite}
+.marquee span{font-family:var(--serif);font-size:clamp(26px,4vw,46px);padding-right:1.2em}
+.marquee span i{color:var(--rose2)}
+.marquee span::after{content:"✦";color:var(--gold);font-size:.5em;vertical-align:middle;margin-left:1.2em}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* reveal */
+[data-reveal]{opacity:0;transform:translateY(30px);filter:blur(6px);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.7,.15,1),filter .9s ease;transition-delay:var(--d,0ms)}
+[data-reveal].in{opacity:1;transform:none;filter:none}
+
+/* pinned story */
+.pin{height:360vh;padding:0}
+.pin-inner{position:sticky;top:0;height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden}
+.pin-line{position:absolute;opacity:0;transform:translateY(20px) scale(.97);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.15,1);font-family:var(--serif);font-size:clamp(32px,5.4vw,70px);line-height:1.1;max-width:18ch;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));text-wrap:balance}
+.pin-line.on{opacity:1;transform:none}
+.pin-orb{position:absolute;width:60vmin;height:60vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,93,143,.22),transparent 65%);filter:blur(10px);transition:transform 1s ease}
+
+/* stacked cards */
+.stack{display:grid;gap:28px;margin-top:40px}
+.card{position:sticky;top:calc(10vh + var(--i)*16px);background:linear-gradient(160deg,var(--card),#120a1a);border:1px solid var(--line);border-radius:30px;padding:clamp(28px,5vw,60px);min-height:52vh;display:grid;align-content:center;gap:18px;box-shadow:0 40px 90px rgba(0,0,0,.5);transform-origin:top center;overflow:hidden}
+.card::before{content:"";position:absolute;inset:auto -20% -40% auto;width:60%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,hsla(var(--h),90%,65%,.28),transparent 65%);pointer-events:none}
+.card .n{font-family:var(--serif);font-size:15px;letter-spacing:.2em;color:var(--gold)}
+.card h3{font-size:clamp(30px,4.6vw,58px)}
+.card p{color:var(--muted);max-width:52ch;font-size:clamp(16px,1.6vw,19px)}
+
+/* timeline */
+.tl{position:relative;display:grid;gap:48px;padding-left:40px;margin-top:40px}
+.tl-line{position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.tl-line i{display:block;width:100%;height:100%;background:linear-gradient(var(--rose),var(--gold));transform:scaleY(0);transform-origin:top;transition:transform .2s linear}
+.tl-item{position:relative;display:grid;gap:8px}
+.tl-item::before{content:"";position:absolute;left:-36px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--rose);box-shadow:0 0 0 6px rgba(255,93,143,.12)}
+.tl-item time{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.tl-item h3{font-size:clamp(26px,3.4vw,40px)}
+.tl-item p{color:var(--muted);max-width:52ch}
+
+/* the reel: every photo and video on two scroll-driven rows */
+.reel-sec{padding-bottom:0}
+.reel{position:relative}
+.reel-pin{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:3.5vh}
+.reel-row{display:flex;align-items:center;gap:clamp(14px,2.4vw,36px);width:max-content;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));will-change:transform}
+.reel-row:nth-child(2){padding-left:calc(max(16px,env(safe-area-inset-left,0px)) + 12vw)}
+.frame{flex:none;position:relative;height:30vh;aspect-ratio:var(--ar,3/4);border-radius:14px;overflow:hidden;background:#1a1020;box-shadow:0 30px 70px rgba(0,0,0,.5);opacity:0;transform:translateY(60px) scale(.82) rotate(var(--r,0deg));filter:blur(10px);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.7,.15,1),filter .9s ease;cursor:zoom-in}
+.frame.tall{height:40vh}
+.frame.in{opacity:1;transform:rotate(var(--r,0deg));filter:none}
+.frame img,.frame video{width:100%;height:100%;display:block;object-fit:cover}
+.frame .play{position:absolute;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;background:rgba(10,7,16,.6);backdrop-filter:blur(6px);display:grid;place-items:center;font-size:12px;color:#fff;pointer-events:none}
+.frame.note{height:auto;aspect-ratio:auto;width:min(300px,62vw);padding:22px 24px;background:rgba(255,255,255,.05);border:1px solid var(--line);backdrop-filter:blur(10px);cursor:default;box-shadow:none}
+.frame.note p{font-family:var(--serif);font-size:clamp(18px,2vw,24px);line-height:1.3;color:var(--fg);text-wrap:balance}
+.frame.note p::before{content:"never captured";display:block;font-family:var(--sans);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.reel-count{position:absolute;bottom:max(18px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:640px){.frame{height:26vh}.frame.tall{height:34vh}.reel-pin{gap:2.5vh}}
+#lb video{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 40px 120px rgba(0,0,0,.7)}
+#lb{position:fixed;inset:0;z-index:80;background:rgba(6,4,10,.94);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
+#lb[hidden]{display:none}
+#lb img{max-width:100%;max-height:100%;border-radius:6px;box-shadow:0 40px 120px rgba(0,0,0,.7);animation:cardIn .4s cubic-bezier(.2,.7,.15,1)}
+#lb .nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.08);font-size:22px;display:grid;place-items:center}
+#lb .prev{left:max(12px,env(safe-area-inset-left,0px))}
+#lb .next{right:max(12px,env(safe-area-inset-right,0px))}
+
+/* game */
+.game-box{position:relative;margin-top:36px;border-radius:30px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(80% 80% at 50% 110%,#2a1134,#0e0914 70%);height:min(70vh,520px);touch-action:none;user-select:none;-webkit-user-select:none}
+#gc{width:100%;height:100%;display:block}
+.hud{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;gap:12px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;font-variant-numeric:tabular-nums;pointer-events:none}
+.hud span b{color:var(--gold)}
+.game-start{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,7,16,.55);backdrop-filter:blur(6px);text-align:center;padding:24px}
+.game-start[hidden]{display:none}
+.game-start .in{display:grid;gap:16px;justify-items:center;max-width:36ch}
+.game-start h3{font-size:clamp(30px,5vw,54px)}
+.game-start p{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:16px 30px;background:linear-gradient(135deg,var(--rose),#ff3d78);color:#fff;font-weight:700;letter-spacing:.04em;box-shadow:0 12px 40px rgba(255,93,143,.4);transition:transform .25s,box-shadow .25s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 50px rgba(255,93,143,.55)}
+.btn:disabled{opacity:.8;cursor:default;transform:none}
+.btn.ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none;color:var(--fg)}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#e9a85c);color:#2a1a0a;box-shadow:0 12px 40px rgba(243,201,140,.35)}
+.unlock{margin-top:36px;border:1px solid rgba(243,201,140,.4);border-radius:30px;padding:clamp(28px,5vw,56px);background:linear-gradient(160deg,rgba(243,201,140,.08),rgba(255,93,143,.06));display:grid;gap:18px;text-align:center;justify-items:center}
+.unlock[hidden]{display:none}
+.unlock .badge{display:inline-flex;gap:10px;align-items:center;border-radius:999px;padding:8px 16px;background:rgba(243,201,140,.14);color:var(--gold);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+.unlock h3{font-size:clamp(28px,4.4vw,52px)}
+.unlock .letter-text{font-family:var(--serif);font-size:clamp(20px,2.4vw,27px);line-height:1.45;max-width:46ch;min-height:3em;color:var(--fg)}
+
+/* need you */
+.needyou{text-align:center}
+.glow-btn{position:relative;margin-top:40px;border:0;border-radius:999px;padding:26px 54px;font-size:clamp(18px,2.4vw,24px);font-weight:700;background:radial-gradient(120% 120% at 50% 0%,#ff8fb4,#ff3d78 60%,#c21e55);color:#fff;letter-spacing:.02em;box-shadow:0 0 0 0 rgba(255,93,143,.6),0 20px 60px rgba(255,61,120,.45);animation:pulse 2.4s ease-out infinite;transition:transform .3s}
+.glow-btn:hover{transform:scale(1.04)}
+.glow-btn::before{content:"";position:absolute;inset:-14px;border-radius:999px;border:1px solid rgba(255,158,189,.35);animation:ring 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,93,143,.55),0 20px 60px rgba(255,61,120,.45)}100%{box-shadow:0 0 0 34px rgba(255,93,143,0),0 20px 60px rgba(255,61,120,.45)}}
+@keyframes ring{0%{transform:scale(.9);opacity:0}40%{opacity:1}100%{transform:scale(1.25);opacity:0}}
+.sub{margin-top:22px;color:var(--muted);font-size:14px}
+#fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:30;border:0;border-radius:999px;padding:14px 20px;background:linear-gradient(135deg,#ff8fb4,#ff3d78);color:#fff;font-weight:700;font-size:14px;box-shadow:0 10px 40px rgba(255,61,120,.5);display:flex;gap:8px;align-items:center;transform:translateY(120px);opacity:0;transition:transform .5s cubic-bezier(.2,.7,.15,1),opacity .5s}
+#fab.show{transform:none;opacity:1}
+#fab svg{width:18px;height:18px}
+
+/* overlay */
+.overlay{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
+.overlay[hidden]{display:none}
+.overlay-glow{position:fixed;inset:0;background:radial-gradient(70% 60% at 50% 40%,hsla(var(--glow-h),95%,70%,.55),hsla(var(--glow-h),80%,40%,.35) 40%,rgba(10,7,16,.92) 100%);backdrop-filter:blur(14px);animation:glowIn .8s ease;transition:background .8s}
+@keyframes glowIn{from{opacity:0}to{opacity:1}}
+.hug-card{position:relative;width:min(560px,100%);background:rgba(20,12,28,.72);border:1px solid rgba(255,255,255,.14);border-radius:32px;padding:clamp(24px,4vw,44px);display:grid;gap:22px;justify-items:center;text-align:center;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:cardIn .7s cubic-bezier(.2,.7,.15,1);margin-block:auto}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+.x{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:20px;line-height:1}
+.buddy{width:170px;height:170px}
+.buddy svg{width:100%;height:100%;display:block;overflow:visible}
+.buddy .arm-l{transform-origin:50px 120px;animation:hugL 1.8s ease-in-out infinite}
+.buddy .arm-r{transform-origin:150px 120px;animation:hugR 1.8s ease-in-out infinite}
+.buddy .heart{transform-origin:100px 135px;animation:squeeze 1.8s ease-in-out infinite}
+.buddy .body{transform-origin:100px 150px;animation:bounce 1.8s ease-in-out infinite}
+.buddy .eye{animation:blink 4s infinite}
+@keyframes hugL{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+@keyframes hugR{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+@keyframes squeeze{0%,100%{transform:scale(1)}50%{transform:scale(.88)}}
+@keyframes bounce{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.96) translateY(3px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.hug-msg{font-family:var(--serif);font-size:clamp(22px,3vw,30px);line-height:1.35;min-height:3.2em;max-width:34ch}
+.hug-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.hug-actions .btn{padding:12px 20px;font-size:14px}
+.date-out{border:1px dashed rgba(243,201,140,.5);border-radius:18px;padding:14px 18px;color:var(--gold);font-size:16px;max-width:40ch}
+.date-out[hidden]{display:none}
+.mood{display:grid;gap:12px;justify-items:center;border-top:1px solid var(--line);padding-top:20px;width:100%}
+.mood .q{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;transition:.25s}
+.chip:hover,.chip.on{background:rgba(255,158,189,.18);border-color:var(--rose2)}
+.mood-out{color:var(--fg);max-width:38ch;min-height:1.5em;font-size:16px}
+.daily{font-size:14px;color:var(--muted);max-width:40ch}
+.daily b{color:var(--gold);display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px}
+
+/* invite */
+.invite{text-align:center;padding-bottom:60px}
+.env-wrap{display:grid;justify-items:center;gap:18px;margin-top:50px}
+.env{position:relative;width:min(380px,88vw);aspect-ratio:1.55;cursor:pointer;perspective:1200px;border:0;background:none;padding:0;max-width:100%;display:block}
+.env .back{position:absolute;inset:0;background:linear-gradient(180deg,#f3d7c8,#e9bfae);border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.env .letter{position:absolute;left:6%;right:6%;bottom:6%;height:92%;background:var(--paper);color:var(--ink);border-radius:8px;transform:translateY(0);transition:transform 1s cubic-bezier(.2,.7,.15,1) .35s;display:grid;align-content:center;gap:6px;padding:18px;z-index:1;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.env .letter h3{font-size:30px;line-height:1}
+.env .letter p{font-size:14px;line-height:1.4}
+.env .letter .wh{font-family:var(--serif);font-size:20px;color:#b1255a}
+.env .pocket{position:absolute;inset:0;z-index:2;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);background:linear-gradient(180deg,#f0c9b8,#e3b19f);border-radius:10px}
+.env .flap{position:absolute;inset:0 0 auto 0;height:56%;z-index:3;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(180deg,#f7dfd2,#edc6b5);transform-origin:top;transition:transform .8s cubic-bezier(.4,0,.2,1);border-radius:10px 10px 0 0}
+.env .seal{position:absolute;left:50%;top:50%;z-index:4;transform:translate(-50%,-40%);width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8fb4,#c21e55);box-shadow:0 6px 18px rgba(0,0,0,.35);display:grid;place-items:center;transition:opacity .4s}
+.env .seal svg{width:26px;height:26px}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .seal{opacity:0}
+.env.open .letter{transform:translateY(-72%);z-index:3}
+.hint{color:var(--muted);font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.rsvp{display:grid;gap:14px;justify-items:center;margin-top:140px}
+.rsvp[hidden]{display:none}
+.rsvp .btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.rsvp .yay{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);max-width:30ch}
+.rsvp .yay[hidden]{display:none}
+#no{touch-action:manipulation;transition:left .4s cubic-bezier(.2,.7,.15,1),top .4s cubic-bezier(.2,.7,.15,1),transform .4s,opacity .6s;white-space:nowrap}
+#no.loose{position:fixed;left:0;top:0;z-index:35;margin:0;animation:floaty 2.6s ease-in-out infinite}
+#no.gone{opacity:0;transform:scale(.2) rotate(40deg);pointer-events:none}
+@keyframes floaty{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.invite-details{display:grid;gap:4px;color:var(--muted);font-size:15px}
+.invite-details b{color:var(--gold);font-weight:700}
+footer{position:relative;z-index:1;text-align:center;padding:60px 16px 90px;color:var(--muted);font-size:13px;letter-spacing:.08em}
+footer i{color:var(--rose2);font-style:normal}
+#music{position:fixed;left:max(18px,env(safe-area-inset-left,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:30;border:1px solid var(--line);background:rgba(20,12,28,.7);backdrop-filter:blur(10px);border-radius:999px;padding:10px 16px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+#music[hidden],#fab[hidden],#wa[hidden],#playNote[hidden]{display:none}
+
+@media (max-width:640px){
+  .card{min-height:0;top:calc(8vh + var(--i)*10px)}
+  .tl{padding-left:30px}
+  .tl-item::before{left:-27px}
+  .glow-btn{padding:20px 34px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  .char,.hero .lead,.count,.scroll-cue{opacity:1!important;transform:none!important;filter:none!important}
+  [data-reveal]{opacity:1;transform:none;filter:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="prog"></div>
+
+<div id="gate">
+  <div class="gate-in">
+    <p class="eyebrow">A little something, made by hand</p>
+    <div class="gate-name">for <i id="gateName">you</i></div>
+    <button class="gate-heart" id="gateBtn" aria-label="Open">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9ebd"/><stop offset="1" stop-color="#ff3d78"/></linearGradient></defs><path fill="url(#hg)" d="M50 88 C20 66 8 52 8 34 A20 20 0 0 1 50 24 A20 20 0 0 1 92 34 C92 52 80 66 50 88Z"/></svg>
+    </button>
+    <p class="gate-hint">tap the heart to open</p>
+  </div>
+</div>
+
+<main>
+  <section class="hero" id="top">
+    <div class="hero-inner wrap">
+      <p class="eyebrow char" style="--i:0">Happy birthday</p>
+      <h1 class="display" id="heroName" aria-label="Happy Birthday"></h1>
+      <p class="lead" style="margin-top:24px;margin-inline:auto">I built you a tiny corner of the internet. Nobody else gets in. Scroll slowly, there's a surprise at the end.</p>
+      <div style="margin-top:30px"><div class="count" id="count"><span id="countLabel">Loading</span></div></div>
+    </div>
+    <div class="scroll-cue">scroll<i></i></div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+
+  <section class="pin" id="story" aria-label="A few words">
+    <div class="pin-inner">
+      <div class="pin-orb" id="orb"></div>
+      <div id="pinLines"></div>
+    </div>
+  </section>
+
+  <section id="reasons">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>Seven of a few thousand</p>
+      <h2 class="h2" data-reveal style="--d:80ms">Reasons it was always <i>going to be you</i></h2>
+      <p class="lead" data-reveal style="--d:160ms">Keep scrolling. They stack up, which is exactly what happened to me.</p>
+      <div class="stack" id="stack"></div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="wrap narrow">
+      <p class="eyebrow" data-reveal>How we got here</p>
+      <h2 class="h2" data-reveal style="--d:80ms">The short version <i>of us</i></h2>
+      <div class="tl" id="tl"><div class="tl-line"><i id="tlFill"></i></div></div>
+    </div>
+  </section>
+
+  <section id="gallery" class="reel-sec">
+    <div class="wrap center">
+      <p class="eyebrow" data-reveal>Evidence</p>
+      <h2 class="h2" data-reveal style="--d:80ms">Our favourite <i>moments</i></h2>
+      <p class="lead" data-reveal style="--d:160ms">Some of them, anyway. The best ones were never captured. Keep scrolling, they come one at a time.</p>
+    </div>
+    <div class="reel" id="reel">
+      <div class="reel-pin">
+        <div class="reel-row" id="row1"></div>
+        <div class="reel-row" id="row2"></div>
+        <p class="reel-count" id="reelCount"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="game">
+    <div class="wrap">
+      <div class="center">
+        <p class="eyebrow" data-reveal>A tiny game, just for you</p>
+        <h2 class="h2" data-reveal style="--d:80ms">Catch <i>my heart</i></h2>
+        <p class="lead" data-reveal style="--d:160ms">Tap the hearts before they float away. Catch enough and something unlocks. Gold ones count triple.</p>
+      </div>
+      <div class="game-box" data-reveal style="--d:240ms">
+        <canvas id="gc"></canvas>
+        <div class="hud"><span>Caught <b id="score">0</b> / <span id="goal">15</span></span><span><b id="timer">30</b>s</span></div>
+        <div class="game-start" id="gameStart">
+          <div class="in">
+            <h3 id="gsTitle">Ready?</h3>
+            <p id="gsText">You have 30 seconds. I believe in you more than is reasonable.</p>
+            <button class="btn" id="gstart">Start catching</button>
+          </div>
+        </div>
+      </div>
+      <div class="unlock" id="unlock" hidden>
+        <span class="badge">✦ Achievement unlocked</span>
+        <h3>You have officially stolen my heart. <i style="color:var(--rose2)">No refunds.</i></h3>
+        <p class="letter-text" id="secret"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="needyou" id="needyou">
+    <div class="wrap narrow">
+      <p class="eyebrow" data-reveal>For the days I'm not next to you</p>
+      <h2 class="h2" data-reveal style="--d:80ms">Press this whenever <i>you need me</i></h2>
+      <p class="lead" data-reveal style="--d:160ms">Bad day, good day, 3 AM, whatever. It works even when I'm asleep in Pune. Come back as often as you like. It's yours.</p>
+      <div data-reveal style="--d:240ms"><button class="glow-btn" id="needBtn">I need you right now</button></div>
+      <p class="sub" data-reveal style="--d:300ms">There's a new note in there every single day.</p>
+    </div>
+  </section>
+
+  <section class="invite" id="invite">
+    <div class="wrap narrow">
+      <p class="eyebrow" data-reveal>One more thing</p>
+      <h2 class="h2" data-reveal style="--d:80ms">Your real gift <i>didn't fit</i> on a website</h2>
+      <p class="lead" data-reveal style="--d:160ms">So it's waiting somewhere else. Open the envelope.</p>
+      <div class="env-wrap" data-reveal style="--d:240ms">
+        <button class="env" id="env" aria-label="Open the invitation">
+          <div class="back"></div>
+          <div class="letter">
+            <h3>You're invited</h3>
+            <p class="wh" id="invWhere"></p>
+            <p id="invWhen"></p>
+            <p id="invNote"></p>
+          </div>
+          <div class="pocket"></div>
+          <div class="flap"></div>
+          <div class="seal"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#fff" d="M50 88 C20 66 8 52 8 34 A20 20 0 0 1 50 24 A20 20 0 0 1 92 34 C92 52 80 66 50 88Z"/></svg></div>
+        </button>
+        <p class="hint" id="envHint">tap to open</p>
+      </div>
+      <div class="rsvp" id="rsvp" hidden>
+        <div class="invite-details">
+          <p><b>When</b> <span id="dWhen"></span></p>
+          <p><b>Where</b> <span id="dWhere"></span></p>
+          <p><b>Bring</b> just you. I've got the rest.</p>
+          <p><b>Dress code</b> whatever makes you feel like you.</p>
+        </div>
+        <div class="btn-row" style="margin-top:20px">
+          <button class="btn gold" id="yes">I'm coming 🥹</button>
+          <button class="btn ghost" id="no" tabindex="-1" aria-hidden="true">I'm not coming 🔫</button>
+          <a class="btn ghost" id="wa" href="#" target="_blank" rel="noopener" hidden>Tell me on WhatsApp</a>
+        </div>
+        <p class="yay" id="yay" hidden></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>made with far too much love by <i id="footName"></i> · <span id="year"></span></footer>
+
+<button id="fab" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#fff" d="M50 88 C20 66 8 52 8 34 A20 20 0 0 1 50 24 A20 20 0 0 1 92 34 C92 52 80 66 50 88Z"/></svg>I need you</button>
+<button id="music" hidden>♪ music</button>
+<div id="lb" hidden role="dialog" aria-label="Photo"><button class="nav prev" aria-label="Previous">‹</button><img alt=""><video controls playsinline hidden></video><button class="nav next" aria-label="Next">›</button></div>
+
+<div id="hug" class="overlay" hidden role="dialog" aria-modal="true" aria-label="I'm here">
+  <div class="overlay-glow"></div>
+  <div class="hug-card">
+    <button class="x" id="hugClose" aria-label="Close">×</button>
+    <div class="buddy" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="bg1" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff1f5"/><stop offset="1" stop-color="#ffc4d6"/></radialGradient>
+          <linearGradient id="hg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9ebd"/><stop offset="1" stop-color="#ff3d78"/></linearGradient>
+        </defs>
+        <g class="body">
+          <ellipse cx="100" cy="112" rx="62" ry="58" fill="url(#bg1)"/>
+          <g class="eye" style="transform-origin:78px 96px"><ellipse cx="78" cy="96" rx="5" ry="7" fill="#3a1f2b"/></g>
+          <g class="eye" style="transform-origin:122px 96px"><ellipse cx="122" cy="96" rx="5" ry="7" fill="#3a1f2b"/></g>
+          <path d="M90 112 Q100 120 110 112" stroke="#3a1f2b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="62" cy="110" r="8" fill="#ff9ebd" opacity=".7"/><circle cx="138" cy="110" r="8" fill="#ff9ebd" opacity=".7"/>
+        </g>
+        <g class="heart"><path fill="url(#hg2)" d="M100 165 C72 145 62 133 62 118 A17 17 0 0 1 100 110 A17 17 0 0 1 138 118 C138 133 128 145 100 165Z"/></g>
+        <path class="arm-l" d="M50 120 Q40 150 78 158" stroke="#ffc4d6" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path class="arm-r" d="M150 120 Q160 150 122 158" stroke="#ffc4d6" stroke-width="16" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="hug-msg" id="hugMsg"></p>
+    <div class="hug-actions">
+      <button class="btn" id="hugAgain">Say it again</button>
+      <button class="btn gold" id="dateIdea">Surprise date idea</button>
+      <button class="btn ghost" id="playNote" hidden>▶ Play a voice note</button>
+    </div>
+    <p class="date-out" id="dateOut" hidden></p>
+    <div class="mood">
+      <p class="q">How are you feeling today?</p>
+      <div class="chips">
+        <button class="chip" data-mood="happy">Happy 🌞</button>
+        <button class="chip" data-mood="sad">Sad 🌧️</button>
+        <button class="chip" data-mood="stressed">Stressed 🌀</button>
+        <button class="chip" data-mood="missing">Missing you 🫂</button>
+      </div>
+      <p class="mood-out" id="moodOut"></p>
+    </div>
+    <p class="daily"><b>Today's note</b><span id="dailyNote"></span></p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
+<script src="photos/list.js"></script>
+<script>
+/* =====================================================================
+   EDIT EVERYTHING HERE. Nothing below this block needs touching.
+   ===================================================================== */
+const CONFIG = {
+  herName: "Mahek",                // her name (or what you call her)
+  yourName: "Atharva",
+  birthday: "2026-10-29",          // YYYY-MM-DD, used for the countdown
+  invite: {
+    when: "Monday, 2 November",
+    where: "My home, Pune",
+    note: "There's something here with your name on it. Literally.",
+  },
+  whatsappNumber: "",              // e.g. "919876543210" (country code, no + or spaces). Leave "" to hide the button.
+  musicUrl: "",                    // optional background music file (mp3). Leave "" for none.
+  voiceNotes: [],                  // optional: ["notes/one.mp3","notes/two.mp3"]. Leave [] to hide the button.
+  // Photos and videos come from the photos folder automatically (run update-photos.cmd after adding).
+  // These cards are mixed in between them, for the moments nobody photographed:
+  uncaptured: [
+    "Every call that went past 3 AM and neither of us hung up first.",
+    "The first time you said it back. No camera. I remember every detail anyway.",
+    "Every goodbye that took forty minutes longer than it should have.",
+    "The way you look at me when you think I'm not looking. I always am.",
+  ],
+  pinLines: [
+    "Before you scroll any further, I need you to know one thing.",
+    "I didn't plan to fall for you <i>this</i> hard.",
+    "But you laughed at something stupid I said, and that was it.",
+    "Every day since has quietly become my favourite day.",
+    "So today, on <i>your</i> day, I made you something.",
+    "Scroll. It's all yours.",
+  ],
+  reasons: [
+    { t: "The way you say my name when you're annoyed.", p: "It's supposed to be a warning. It's actually my favourite sound in the world." },
+    { t: "You remember everything.", p: "Tiny things I said months ago and forgot. You didn't. You never do." },
+    { t: "Your laugh arrives before your joke does.", p: "And every single time, I fall for it again." },
+    { t: "You're brave in ways you don't notice.", p: "You walk into rooms that scare you and act like they don't. I notice." },
+    { t: "You make ordinary days feel planned.", p: "A chai, a walk, a call that goes on too long. With you it's always an event." },
+    { t: "You're kind when nobody's watching.", p: "I've watched. That's how I know." },
+    { t: "You chose me.", p: "Out of everyone, every day, on purpose. I still don't fully get it. I'm just grateful." },
+  ],
+  story: [
+    { when: "The first hello", title: "You had no idea what was coming.", what: "Neither did I." },
+    { when: "The first real conversation", title: "From 'hi' to 3 AM.", what: "Without either of us noticing." },
+    { when: "The moment I knew", title: "Nothing special happened.", what: "You were just there, being you, and my brain quietly went: oh. It's her." },
+    { when: "Every day since", title: "Still choosing you.", what: "Still winning." },
+    { when: "Today", title: "Your birthday.", what: "The best day of the year, because it's the day you showed up." },
+  ],
+  secretMessage: "You have officially stolen my heart. No refunds, no exchanges, no returns. It's yours now, and honestly it's in better hands than it ever was with me. Happy birthday, {name}. I love you more than this website can hold, and it holds quite a lot.",
+  hugMessages: [
+    "Hey. I'm right here. Not physically, but in every way that counts. Breathe. You've got me.",
+    "Whatever it is, we'll fix it together. And if we can't fix it, we'll survive it together. Same thing.",
+    "You are not too much. You have never been too much. You're exactly the right amount of you.",
+    "Close your eyes. Imagine my arms around you. Stay there for ten seconds. I'll wait.",
+    "I'm counting the days until you're here. Every one of them is worth it because you're at the end.",
+    "You don't have to be okay right now. You just have to let me love you while you're not.",
+    "I'd pick you again. Right now, tired, messy, whatever this is. Every version of you. Every time.",
+    "The world is loud. I'm not. Come sit with me for a minute.",
+    "You're loved by someone who means it. That's me. Hi.",
+    "Nothing about today changes how I feel. Nothing about any day will.",
+  ],
+  moods: {
+    happy:    ["Good. That's my favourite version of you. Tell me everything later.", "Your happy is contagious even through a screen. Keep going.", "Whatever caused this, I owe it a thank-you."],
+    sad:      ["Come here. You don't need a reason. Sad days are allowed, and I'm staying through all of them.", "Cry if you want to. I'm holding the tissues and the hug. No judgement, no timeline.", "It'll pass. Maybe not today, but it will. I'm not going anywhere while it does."],
+    stressed: ["Okay. One thing at a time. First thing: breathe. Second thing: you've done harder than this.", "You don't have to carry all of it at once. Put some down. I've got the rest.", "Deadlines end. You're brilliant. Both of those are facts."],
+    missing:  ["I miss you too. Stupidly. Constantly. Check your phone later, I may have overshared.", "The distance is temporary. Us is not.", "I'm already on my way to you in every way that isn't a ticket. The ticket is coming."],
+  },
+  dateIdeas: [
+    "Sunset at Vetal Tekdi, then whatever we're craving on the way down.",
+    "A full day of nothing at my place. Blanket, movies, zero plans, maximum snacks.",
+    "A Pune food crawl: misal, then vada pav, then kulfi. In that order. No skipping.",
+    "Old Pune walk: Shaniwar Wada, Tulshibaug, and I buy you something tiny and useless that you'll love.",
+    "Rooftop dinner. Your outfit choice, my playlist.",
+    "A late-night drive with no destination and the windows down.",
+    "Bookstore date: we each pick a book for the other. Mandatory reading.",
+    "Lonavala in the rain if the weather cooperates. Hot bhajiyas if it doesn't.",
+  ],
+  dailyNotes: [
+    "Reminder: you're the best thing about my timeline.",
+    "Drink water. Yes, now. I'm watching. Lovingly.",
+    "Someone in Pune thinks about you more than is probably normal.",
+    "You looked beautiful today. I don't need to see it to know it.",
+    "Whatever you're overthinking: it's going to be fine.",
+    "Today's forecast: loved, with a high chance of being missed.",
+    "I like you more than I like sleep. That's serious.",
+    "If today's hard, it has to go through me first.",
+    "You're allowed to rest. In fact, I insist.",
+    "Somebody got incredibly lucky. Hi, it's me.",
+    "I saved a seat for you in every future I imagine.",
+    "You make me want to be the person you think I am.",
+    "Call me when you read this. Or don't, and I'll call you.",
+    "Still yours. Still not sorry.",
+  ],
+};
+/* ===================================================================== */
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pop = o => { if (window.confetti) confetti(Object.assign({ particleCount: 160, spread: 85, startVelocity: 40, origin: { y: .6 }, colors: ['#ff5d8f', '#f3c98c', '#ff9ebd', '#ffffff'] }, o || {})); };
+
+/* ---------- fill content ---------- */
+document.title = 'Happy Birthday ' + CONFIG.herName;
+$('#gateName').textContent = CONFIG.herName;
+$('#footName').textContent = CONFIG.yourName;
+$('#year').textContent = new Date().getFullYear();
+
+(function splitName() {
+  const h = $('#heroName'); const text = 'Happy birthday, ' + CONFIG.herName;
+  let i = 1; const nameStart = text.length - CONFIG.herName.length;
+  [...text].forEach((ch, k) => {
+    const s = document.createElement('span'); s.className = 'char' + (ch === ' ' ? ' sp' : '');
+    s.textContent = ch === ' ' ? ' ' : ch; s.style.setProperty('--i', i++);
+    if (k >= nameStart) { s.style.fontStyle = 'italic'; s.style.color = 'var(--rose2)'; }
+    h.appendChild(s);
+  });
+})();
+
+$('#marquee').innerHTML = Array(8).fill(`<span>happy birthday <i>${CONFIG.herName}</i></span>`).join('');
+
+$('#pinLines').innerHTML = CONFIG.pinLines.map(l => `<p class="pin-line">${l}</p>`).join('');
+
+$('#stack').innerHTML = CONFIG.reasons.map((r, i) =>
+  `<article class="card" style="--i:${i};--h:${(330 + i * 22) % 360}"><span class="n">${String(i + 1).padStart(2, '0')} / ${String(CONFIG.reasons.length).padStart(2, '0')}</span><h3>${r.t}</h3><p>${r.p}</p></article>`).join('');
+
+$('#tl').insertAdjacentHTML('beforeend', CONFIG.story.map((s, i) =>
+  `<div class="tl-item" data-reveal style="--d:${i * 60}ms"><time>${s.when}</time><h3>${s.title}</h3><p>${s.what}</p></div>`).join(''));
+
+/* ---------- the reel: every photo and video from photos/list.js, scroll-driven ---------- */
+const MEDIA = (Array.isArray(window.PHOTOS) ? window.PHOTOS : []).map(x => typeof x === 'string' ? { src: x, video: /\.(mp4|webm|mov|m4v)$/i.test(x) } : x);
+let reelTick = () => { };
+if (!MEDIA.length) { $('#gallery').hidden = true; }
+else {
+  const reel = $('#reel'), rows = [$('#row1'), $('#row2')], count = $('#reelCount');
+  const html = [[], []]; const notes = CONFIG.uncaptured.slice(); const every = Math.max(4, Math.floor(MEDIA.length / (notes.length + 1)));
+  MEDIA.forEach((m, i) => {
+    const r = i % 2, tall = ((i >> 1) % 3) === 1, rot = ((i % 3) - 1) * 1.1;
+    const ar = m.w && m.h ? `${m.w}/${m.h}` : (m.video ? '9/16' : '3/4');
+    html[r].push(`<figure class="frame${tall ? ' tall' : ''}" data-i="${i}" style="--r:${rot}deg;--ar:${ar}">` +
+      (m.video ? `<video src="${m.src}" muted loop playsinline preload="metadata"></video><span class="play">▶</span>` : `<img src="${m.src}" alt="" loading="lazy" decoding="async">`) + `</figure>`);
+    if (notes.length && (i + 1) % every === 0) html[(i + 1) % 2].push(`<div class="frame note"><p>${notes.shift()}</p></div>`);
+  });
+  rows[0].innerHTML = html[0].join(''); rows[1].innerHTML = html[1].join('');
+  const frames = rows.map(r => $$('.frame', r));
+  let widths = [0, 0], lefts = [[], []], reelH = innerHeight, measureQueued = false;
+  function measure() {
+    measureQueued = false;
+    widths = rows.map(r => r.scrollWidth);
+    lefts = frames.map(fs => fs.map(f => f.offsetLeft));
+    const travel = Math.max(...widths) - innerWidth + 24;
+    reelH = Math.max(innerHeight, travel * .8 + innerHeight);
+    reel.style.height = reelH + 'px';
+    reelTick(innerHeight, innerWidth);
+  }
+  const queueMeasure = () => { if (!measureQueued) { measureQueued = true; requestAnimationFrame(measure); } };
+  $$('video', reel).forEach(v => v.addEventListener('loadedmetadata', () => { if (v.videoWidth) { v.parentElement.style.setProperty('--ar', `${v.videoWidth}/${v.videoHeight}`); queueMeasure(); } }));
+  addEventListener('resize', queueMeasure);
+  reelTick = (vh, vw) => {
+    const r = reel.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, -r.top / Math.max(1, reelH - vh)));
+    let n = 0;
+    rows.forEach((row, i) => {
+      const tx = -p * Math.max(0, widths[i] - vw + 24);
+      row.style.transform = `translate3d(${tx}px,0,0)`;
+      frames[i].forEach((f, k) => {
+        const x = lefts[i][k] + tx, w = f.offsetWidth, vis = x < vw * .95 && x + w > 0;
+        if (vis && !f.classList.contains('in')) { f.style.transitionDelay = (n++ * 70) + 'ms'; f.classList.add('in'); }
+        const v = f.firstElementChild; if (v && v.tagName === 'VIDEO') { if (vis && v.paused) v.play().catch(() => { }); else if (!vis && !v.paused) v.pause(); }
+      });
+    });
+    count.textContent = `${Math.min(MEDIA.length, Math.max(1, Math.round(p * MEDIA.length)))} / ${MEDIA.length}`;
+  };
+  measure();
+
+  /* lightbox */
+  const lb = $('#lb'), lbImg = $('#lb img'), lbVid = $('#lb video'); let cur = 0;
+  function show(i) {
+    cur = (i + MEDIA.length) % MEDIA.length; const m = MEDIA[cur];
+    lbImg.hidden = !!m.video; lbVid.hidden = !m.video;
+    if (m.video) { lbImg.removeAttribute('src'); lbVid.src = m.src; lbVid.muted = false; lbVid.play().catch(() => { }); }
+    else { lbVid.pause(); lbVid.removeAttribute('src'); lbImg.src = m.src; }
+    lb.hidden = false; document.body.classList.add('lock');
+  }
+  function hide() { lb.hidden = true; lbVid.pause(); document.body.classList.remove('lock'); }
+  rows.forEach(r => r.addEventListener('click', e => { const f = e.target.closest('.frame[data-i]'); if (f) show(+f.dataset.i); }));
+  $('#lb .prev').addEventListener('click', e => { e.stopPropagation(); show(cur - 1); });
+  $('#lb .next').addEventListener('click', e => { e.stopPropagation(); show(cur + 1); });
+  lb.addEventListener('click', e => { if (e.target === lb || e.target === lbImg) hide(); });
+  addEventListener('keydown', e => { if (lb.hidden) return; if (e.key === 'Escape') hide(); if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  let sx = 0; lb.addEventListener('pointerdown', e => sx = e.clientX); lb.addEventListener('pointerup', e => { if (e.target === lbVid) return; const d = e.clientX - sx; if (Math.abs(d) > 50) show(cur + (d < 0 ? 1 : -1)); });
+}
+
+$('#invWhere').textContent = CONFIG.invite.where;
+$('#invWhen').textContent = CONFIG.invite.when;
+$('#invNote').textContent = CONFIG.invite.note;
+$('#dWhen').textContent = CONFIG.invite.when;
+$('#dWhere').textContent = CONFIG.invite.where;
+if (CONFIG.whatsappNumber) {
+  const a = $('#wa'); a.hidden = false;
+  a.href = 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent("I'm coming 🥹❤️ I opened the envelope.");
+}
+$('#dailyNote').textContent = CONFIG.dailyNotes[Math.floor(Date.now() / 864e5) % CONFIG.dailyNotes.length];
+
+/* ---------- gate + music ---------- */
+let music = null;
+if (CONFIG.musicUrl) { music = new Audio(CONFIG.musicUrl); music.loop = true; music.volume = .5; }
+$('#gateBtn').addEventListener('click', () => {
+  $('#gate').classList.add('hide');
+  document.body.classList.add('open');
+  setTimeout(() => pop({ particleCount: 220, spread: 120, origin: { y: .55 } }), 500);
+  if (music) { music.play().then(() => { const m = $('#music'); m.hidden = false; m.textContent = '♪ pause'; }).catch(() => { }); }
+});
+$('#music').addEventListener('click', () => {
+  if (!music) return;
+  if (music.paused) { music.play().catch(() => { }); $('#music').textContent = '♪ pause'; }
+  else { music.pause(); $('#music').textContent = '♪ play'; }
+});
+
+/* ---------- countdown ---------- */
+(function countdown() {
+  const label = $('#countLabel');
+  const target = new Date(CONFIG.birthday + 'T00:00:00+05:30');
+  const end = new Date(target.getTime() + 864e5);
+  function tick() {
+    const now = new Date();
+    if (now < target) {
+      let s = Math.floor((target - now) / 1000);
+      const h = Math.floor(s / 3600); s -= h * 3600; const m = Math.floor(s / 60); s -= m * 60;
+      label.innerHTML = `Your birthday in <b>${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s</b>`;
+    } else if (now < end) label.innerHTML = `It's officially <b>your day</b> 🎂`;
+    else label.innerHTML = `Still celebrating <b>you</b>`;
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+/* ---------- background canvas ---------- */
+(function bg() {
+  const cv = $('#bg'), ctx = cv.getContext('2d'); let W, H, dpr, t0 = performance.now();
+  const orbs = Array.from({ length: 26 }, () => ({ x: Math.random(), y: Math.random(), r: 40 + Math.random() * 140, h: Math.random() < .7 ? 338 : 36, a: .035 + Math.random() * .06, vx: (Math.random() - .5) * .00004, vy: (Math.random() - .5) * .00004, d: .3 + Math.random() * .7 }));
+  const hearts = Array.from({ length: 14 }, () => ({ x: Math.random(), y: Math.random(), s: 6 + Math.random() * 14, v: .00008 + Math.random() * .00015, p: Math.random() * 6, a: .12 + Math.random() * .25 }));
+  function resize() { dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function heart(x, y, s) { ctx.beginPath(); ctx.moveTo(x, y + s * .3); ctx.bezierCurveTo(x, y, x - s / 2, y, x - s / 2, y + s * .3); ctx.bezierCurveTo(x - s / 2, y + s * .6, x, y + s * .8, x, y + s); ctx.bezierCurveTo(x, y + s * .8, x + s / 2, y + s * .6, x + s / 2, y + s * .3); ctx.bezierCurveTo(x + s / 2, y, x, y, x, y + s * .3); ctx.closePath(); }
+  function draw(now) {
+    const dt = Math.min(50, now - t0); t0 = now; const sy = scrollY;
+    ctx.clearRect(0, 0, W, H);
+    for (const o of orbs) {
+      o.x += o.vx * dt; o.y += o.vy * dt; if (o.x < -.2) o.x = 1.2; if (o.x > 1.2) o.x = -.2; if (o.y < -.2) o.y = 1.2; if (o.y > 1.2) o.y = -.2;
+      const x = o.x * W, y = ((o.y * H - sy * .06 * o.d) % (H * 1.4) + H * 1.4) % (H * 1.4) - H * .2;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, o.r); g.addColorStop(0, `hsla(${o.h},90%,70%,${o.a})`); g.addColorStop(1, 'hsla(0,0%,0%,0)');
+      ctx.fillStyle = g; ctx.fillRect(x - o.r, y - o.r, o.r * 2, o.r * 2);
+    }
+    for (const h of hearts) {
+      h.y -= h.v * dt; if (h.y < -.1) { h.y = 1.1; h.x = Math.random(); }
+      const x = h.x * W + Math.sin(now / 1500 + h.p) * 14, y = h.y * H - (sy * .12) % H;
+      ctx.fillStyle = `rgba(255,120,160,${h.a})`; heart(x, ((y % (H * 1.2)) + H * 1.2) % (H * 1.2) - H * .1, h.s); ctx.fill();
+    }
+    if (!reduced) requestAnimationFrame(draw);
+  }
+  addEventListener('resize', resize); resize(); requestAnimationFrame(draw);
+})();
+
+/* ---------- reveal ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+$$('[data-reveal]').forEach(el => io.observe(el));
+
+/* ---------- scroll-driven bits ---------- */
+const pin = $('#story'), pinLines = $$('.pin-line'), orb = $('#orb'), tlEl = $('#tl'), tlFill = $('#tlFill'), heroInner = $('.hero-inner'), prog = $('#prog'), fab = $('#fab'), cards = $$('.card'), needSec = $('#needyou');
+let ticking = false;
+function inView(el) { const r = el.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }
+function onScroll() {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    ticking = false;
+    const vh = innerHeight, sy = scrollY;
+    const doc = document.documentElement.scrollHeight - vh;
+    prog.style.width = (doc > 0 ? sy / doc * 100 : 0) + '%';
+    if (!reduced) { const f = Math.min(1, sy / vh); heroInner.style.transform = `translateY(${sy * .35}px)`; heroInner.style.opacity = Math.max(0, 1 - f * 1.1); }
+    const r = pin.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, -r.top / (r.height - vh)));
+    const idx = Math.min(pinLines.length - 1, Math.floor(p * pinLines.length * .999));
+    const active = r.top <= 1 && r.bottom >= vh * .9;
+    pinLines.forEach((l, i) => l.classList.toggle('on', active && i === idx));
+    orb.style.transform = `translate(${Math.sin(p * 6) * 30}vw, ${Math.cos(p * 5) * 18}vh) scale(${.8 + p * .8})`;
+    cards.forEach((c, i) => {
+      const next = cards[i + 1]; if (!next) return;
+      const top = parseFloat(getComputedStyle(c).top), nr = next.getBoundingClientRect();
+      const d = Math.max(0, Math.min(1, 1 - (nr.top - top) / (vh * .6)));
+      c.style.transform = `scale(${1 - d * .06})`; c.style.filter = `brightness(${1 - d * .35})`;
+    });
+    const tr = tlEl.getBoundingClientRect();
+    tlFill.style.transform = `scaleY(${Math.max(0, Math.min(1, (vh * .7 - tr.top) / tr.height))})`;
+    reelTick(vh, innerWidth);
+    fab.classList.toggle('show', sy > vh * 1.2 && !inView(needSec) && $('#hug').hidden);
+  });
+}
+addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll();
+fab.hidden = false;
+
+/* ---------- the game ---------- */
+function typewrite(el, text, ms) {
+  el.textContent = ''; if (reduced) { el.textContent = text; return; }
+  let i = 0; const id = setInterval(() => { el.textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(id); }, ms);
+}
+(function game() {
+  const cv = $('#gc'), ctx = cv.getContext('2d'), box = cv.parentElement;
+  const GOAL = 15, TIME = 30; $('#goal').textContent = GOAL;
+  const WORDS = ['mine', 'cutie', 'mahek', 'forever', 'yours', '+1', 'ok wow', 'love', 'nice', 'mwah'];
+  let W, H, dpr, hearts = [], parts = [], pops = [], score = 0, timeLeft = TIME, running = false, last = 0, spawnT = 0, won = false;
+  function resize() { const r = box.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function heart(x, y, s) { ctx.beginPath(); ctx.moveTo(x, y + s * .3); ctx.bezierCurveTo(x, y, x - s / 2, y, x - s / 2, y + s * .3); ctx.bezierCurveTo(x - s / 2, y + s * .6, x, y + s * .8, x, y + s); ctx.bezierCurveTo(x, y + s * .8, x + s / 2, y + s * .6, x + s / 2, y + s * .3); ctx.bezierCurveTo(x + s / 2, y, x, y, x, y + s * .3); ctx.closePath(); }
+  function spawn() { const s = 34 + Math.random() * 26; hearts.push({ x: s + Math.random() * (W - s * 2), y: H + s, s, vy: 70 + Math.random() * 70 + (TIME - timeLeft) * 2, p: Math.random() * 6, gold: Math.random() < .12, rot: (Math.random() - .5) * .5 }); }
+  function burst(x, y, gold) { for (let i = 0; i < 18; i++) { const a = Math.random() * 6.28, v = 80 + Math.random() * 220; parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 60, life: 1, gold, s: 3 + Math.random() * 5 }); } }
+  function hud() { $('#score').textContent = score; $('#timer').textContent = Math.max(0, Math.ceil(timeLeft)); }
+  function frame(t) {
+    if (!running) return;
+    const dt = Math.min(.05, (t - last) / 1000); last = t; timeLeft -= dt; spawnT -= dt;
+    if (spawnT <= 0) { spawn(); spawnT = .32 + Math.random() * .3; }
+    ctx.clearRect(0, 0, W, H);
+    for (const h of hearts) { h.y -= h.vy * dt; h.x += Math.sin(t / 600 + h.p) * 40 * dt; }
+    hearts = hearts.filter(h => h.y > -h.s * 2);
+    for (const h of hearts) {
+      ctx.save(); ctx.translate(h.x, h.y); ctx.rotate(Math.sin(t / 500 + h.p) * .15 + h.rot); ctx.translate(-h.x, -h.y);
+      ctx.shadowColor = h.gold ? 'rgba(243,201,140,.9)' : 'rgba(255,93,143,.8)'; ctx.shadowBlur = 24;
+      const g = ctx.createLinearGradient(h.x - h.s / 2, h.y, h.x + h.s / 2, h.y + h.s);
+      if (h.gold) { g.addColorStop(0, '#ffe3b0'); g.addColorStop(1, '#e9a85c'); } else { g.addColorStop(0, '#ff9ebd'); g.addColorStop(1, '#ff3d78'); }
+      ctx.fillStyle = g; heart(h.x, h.y, h.s); ctx.fill(); ctx.restore();
+    }
+    for (const p of parts) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 400 * dt; p.life -= dt * 1.6; ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.gold ? '#f3c98c' : '#ff9ebd'; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0, p.s * p.life), 0, 6.28); ctx.fill(); }
+    parts = parts.filter(p => p.life > 0); ctx.globalAlpha = 1;
+    ctx.font = 'italic 26px "Instrument Serif", Georgia, serif'; ctx.textAlign = 'center';
+    for (const q of pops) { q.y -= 50 * dt; q.life -= dt; ctx.globalAlpha = Math.max(0, q.life); ctx.fillStyle = '#fff'; ctx.fillText(q.text, q.x, q.y); }
+    pops = pops.filter(q => q.life > 0); ctx.globalAlpha = 1;
+    hud();
+    if (timeLeft <= 0) end(); else requestAnimationFrame(frame);
+  }
+  function catchHeart(px, py) {
+    for (let i = hearts.length - 1; i >= 0; i--) {
+      const h = hearts[i], dx = px - h.x, dy = py - (h.y + h.s * .55);
+      if (dx * dx + dy * dy < (h.s * .8) ** 2) {
+        score += h.gold ? 3 : 1; burst(h.x, h.y + h.s * .5, h.gold); pops.push({ x: h.x, y: h.y, text: h.gold ? '+3 ✦' : rnd(WORDS), life: 1 }); hearts.splice(i, 1); hud();
+        if (navigator.vibrate) navigator.vibrate(12);
+        return;
+      }
+    }
+  }
+  cv.addEventListener('pointerdown', e => { if (!running) return; const r = cv.getBoundingClientRect(); catchHeart(e.clientX - r.left, e.clientY - r.top); });
+  function start() { resize(); hearts = []; parts = []; pops = []; score = 0; timeLeft = TIME; running = true; last = performance.now(); spawnT = 0; hud(); $('#gameStart').hidden = true; requestAnimationFrame(frame); }
+  function end() {
+    running = false; const gs = $('#gameStart'); gs.hidden = false;
+    if (score >= GOAL) {
+      $('#gsTitle').textContent = 'You did it.'; $('#gsText').textContent = `${score} hearts. Obviously. Look below.`; $('#gstart').textContent = 'Play again, just for fun';
+      if (!won) { won = true; const u = $('#unlock'); u.hidden = false; pop({ particleCount: 260, spread: 110, origin: { y: .7 } }); typewrite($('#secret'), CONFIG.secretMessage.replace('{name}', CONFIG.herName), 28); setTimeout(() => u.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }), 400); }
+    } else { $('#gsTitle').textContent = 'So close.'; $('#gsText').textContent = `${score} of ${GOAL}. The hearts are shy. One more try?`; $('#gstart').textContent = 'Try again'; }
+  }
+  $('#gstart').addEventListener('click', start);
+  addEventListener('resize', () => { if (running) resize(); });
+})();
+
+/* ---------- I need you ---------- */
+(function needyou() {
+  const ov = $('#hug'), msg = $('#hugMsg'), out = $('#dateOut'), mo = $('#moodOut');
+  let lastMsg = -1, lastDate = -1;
+  function say() { let i; do { i = Math.floor(Math.random() * CONFIG.hugMessages.length); } while (i === lastMsg && CONFIG.hugMessages.length > 1); lastMsg = i; typewrite(msg, CONFIG.hugMessages[i], 22); }
+  function open() { ov.hidden = false; document.body.classList.add('lock'); fab.classList.remove('show'); out.hidden = true; mo.textContent = ''; $$('.chip').forEach(c => c.classList.remove('on')); document.documentElement.style.setProperty('--glow-h', 338); say(); $('#hugClose').focus(); }
+  function close() { ov.hidden = true; document.body.classList.remove('lock'); onScroll(); }
+  $('#needBtn').addEventListener('click', open); $('#fab').addEventListener('click', open); $('#hugClose').addEventListener('click', close);
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !ov.hidden) close(); });
+  $('#hugAgain').addEventListener('click', say);
+  $('#dateIdea').addEventListener('click', () => { let i; do { i = Math.floor(Math.random() * CONFIG.dateIdeas.length); } while (i === lastDate && CONFIG.dateIdeas.length > 1); lastDate = i; out.hidden = false; out.textContent = '✦ ' + CONFIG.dateIdeas[i]; });
+  const hues = { happy: 42, sad: 220, stressed: 280, missing: 338 };
+  $$('.chip').forEach(c => c.addEventListener('click', () => { $$('.chip').forEach(x => x.classList.remove('on')); c.classList.add('on'); const m = c.dataset.mood; document.documentElement.style.setProperty('--glow-h', hues[m]); typewrite(mo, rnd(CONFIG.moods[m]), 18); }));
+  if (CONFIG.voiceNotes.length) {
+    const b = $('#playNote'); b.hidden = false; let cur = null;
+    b.addEventListener('click', () => { if (cur) { cur.pause(); } cur = new Audio(rnd(CONFIG.voiceNotes)); cur.play().then(() => { b.textContent = '▶ Another voice note'; }).catch(() => { b.textContent = "Couldn't play that one. Try again?"; }); });
+  }
+})();
+
+/* ---------- envelope ---------- */
+(function invite() {
+  const env = $('#env');
+  env.addEventListener('click', () => {
+    if (env.classList.contains('open')) return;
+    env.classList.add('open'); $('#envHint').textContent = 'read it properly';
+    setTimeout(() => { const r = $('#rsvp'); r.hidden = false; r.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }); }, 1200);
+  });
+  /* the button that refuses to be pressed */
+  const no = $('#no'); let dodges = 0;
+  const taunts = ["I'm not coming 🔫", "nice try 🔫", "too slow 🔫", "not an option 🔫", "the answer is yes 🔫", "stop it 🔫", "I'm faster 🔫", "😤🔫", "fine. bye. 🔫"];
+  function dodge(e) {
+    if (e && e.cancelable) e.preventDefault();
+    if (no.classList.contains('gone')) return;
+    dodges++; no.blur();
+    const r = no.getBoundingClientRect(), pad = 20, w = r.width, h = r.height;
+    const px = e && e.clientX != null ? e.clientX : r.left + w / 2, py = e && e.clientY != null ? e.clientY : r.top + h / 2;
+    let x, y, tries = 0;
+    do { x = pad + Math.random() * Math.max(1, innerWidth - w - pad * 2); y = pad + Math.random() * Math.max(1, innerHeight - h - pad * 2); tries++; }
+    while (tries < 12 && Math.hypot(x + w / 2 - px, y + h / 2 - py) < Math.min(260, innerWidth * .4));
+    no.classList.add('loose'); no.style.left = x + 'px'; no.style.top = y + 'px';
+    no.textContent = taunts[Math.min(taunts.length - 1, dodges)];
+    if (dodges >= taunts.length + 1) { no.classList.add('gone'); setTimeout(() => no.remove(), 700); }
+  }
+  /* stays put until the first tap; after that it runs from every tap and from the cursor */
+  ['pointerdown', 'mousedown', 'touchstart', 'click'].forEach(t => no.addEventListener(t, dodge, { passive: false }));
+  no.addEventListener('pointerenter', e => { if (dodges > 0) dodge(e); });
+  if (window.PointerEvent) addEventListener('pointermove', e => { if (dodges === 0 || !no.isConnected || no.classList.contains('gone')) return; const r = no.getBoundingClientRect(); const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)); if (d < Math.max(r.width, 90) * .9) dodge(e); }, { passive: true });
+
+  $('#yes').addEventListener('click', () => {
+    if (no.isConnected) { no.classList.add('gone'); setTimeout(() => no.remove(), 700); }
+    pop({ particleCount: 300, spread: 140, origin: { y: .65 } }); setTimeout(() => pop({ particleCount: 120, angle: 60, spread: 60, origin: { x: 0, y: .7 } }), 300); setTimeout(() => pop({ particleCount: 120, angle: 120, spread: 60, origin: { x: 1, y: .7 } }), 500);
+    const y = $('#yay'); y.hidden = false; y.textContent = `Good. Because I've already cleaned my room. See you soon, ${CONFIG.herName}. Screenshot this face and send it to me.`;
+    $('#yes').textContent = 'Locked in ❤️'; $('#yes').disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
